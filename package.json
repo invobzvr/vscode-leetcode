@@ -700,6 +700,11 @@
                             "Acceptance Rate (Descending)"
                         ],
                         "description": "Sorting strategy for problems list."
+                    },
+                    "leetcode.proxy": {
+                        "type": "string",
+                        "default": null,
+                        "scope": "application"
                     }
                 }
             }

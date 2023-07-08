@@ -67,5 +67,9 @@ export function createEnvOption(): {} {
 }
 
 function getHttpAgent(): string | undefined {
+    const proxy = vscode.workspace.getConfiguration('leetcode').get<string>('proxy');
+    if (proxy) {
+        return proxy;
+    }
     return vscode.workspace.getConfiguration("http").get<string>("proxy");
 }
