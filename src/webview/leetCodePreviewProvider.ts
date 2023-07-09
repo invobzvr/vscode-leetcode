@@ -38,7 +38,7 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
             };
         } else {
             return {
-                title: "Description",
+                title: `${this.node.name}: Description`,
                 viewColumn: ViewColumn.Two,
                 preserveFocus: true,
             };
@@ -105,7 +105,7 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
             <head>
                 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https:; script-src vscode-resource: 'unsafe-inline'; style-src vscode-resource: 'unsafe-inline';"/>
                 ${markdownEngine.getStyles()}
-                ${!this.sideMode ? button.style : ""}
+                ${button.style}
                 <style>
                     code { white-space: pre-wrap; }
                 </style>
@@ -118,10 +118,10 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
                 ${body}
                 <hr />
                 ${links}
-                ${!this.sideMode ? button.element : ""}
+                ${button.element}
                 <script>
                     const vscode = acquireVsCodeApi();
-                    ${!this.sideMode ? button.script : ""}
+                    ${button.script}
                 </script>
             </body>
             </html>
