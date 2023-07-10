@@ -705,6 +705,12 @@
                         "type": "string",
                         "default": null,
                         "scope": "application"
+                    },
+                    "leetcode.setWorkspaceFolderEnv": {
+                        "type": "boolean",
+                        "default": false,
+                        "scope": "application",
+                        "description": "Set workspace folder to `process.env.HOME`."
                     }
                 }
             }

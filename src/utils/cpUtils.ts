@@ -3,6 +3,7 @@
 
 import * as cp from "child_process";
 import * as vscode from "vscode";
+import { getWorkspaceConfiguration, getWorkspaceFolder } from "./settingUtils";
 import { leetCodeChannel } from "../leetCodeChannel";
 
 interface IExecError extends Error {
@@ -57,13 +58,15 @@ export async function executeCommandWithProgress(message: string, command: strin
 
 // clone process.env and add http proxy
 export function createEnvOption(): {} {
+    const env: any = Object.create(process.env);
     const proxy: string | undefined = getHttpAgent();
     if (proxy) {
-        const env: any = Object.create(process.env);
         env.http_proxy = proxy;
-        return env;
     }
-    return process.env;
+    if (getWorkspaceConfiguration().get<boolean>('setWorkspaceFolderEnv')) {
+        env.HOME = getWorkspaceFolder();
+    }
+    return env;
 }
 
 function getHttpAgent(): string | undefined {
