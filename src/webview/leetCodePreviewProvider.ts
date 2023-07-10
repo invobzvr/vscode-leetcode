@@ -31,18 +31,11 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
     }
 
     protected getWebviewOption(): ILeetCodeWebviewOption {
-        if (!this.sideMode) {
-            return {
-                title: `${this.node.name}: Preview`,
-                viewColumn: ViewColumn.One,
-            };
-        } else {
-            return {
-                title: `${this.node.name}: Description`,
-                viewColumn: ViewColumn.Two,
-                preserveFocus: true,
-            };
-        }
+        return {
+            title: `${this.node.id}.${this.node.name}: Description`,
+            viewColumn: this.sideMode ? ViewColumn.Two : ViewColumn.One,
+            preserveFocus: true,
+        };
     }
 
     protected getWebviewContent(): string {
