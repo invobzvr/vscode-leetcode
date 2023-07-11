@@ -50,17 +50,8 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
                     position: fixed;
                     bottom: 1rem;
                     right: 1rem;
-                    border: 0;
                     margin: 1rem 0;
                     padding: 0.2rem 1rem;
-                    color: white;
-                    background-color: var(--vscode-button-background);
-                }
-                #solve:hover {
-                    background-color: var(--vscode-button-hoverBackground);
-                }
-                #solve:active {
-                    border: 0;
                 }
                 </style>`,
         };
@@ -101,6 +92,21 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
                 ${button.style}
                 <style>
                     code { white-space: pre-wrap; }
+                    button {
+                        border: 0;
+                        color: white;
+                        background-color: var(--vscode-button-background);
+                    }
+                    button:hover {
+                        background-color: var(--vscode-button-hoverBackground);
+                    }
+                    button:active {
+                        border: 0;
+                    }
+                    .test-case {
+                        float: right;
+                        padding: 3px 7px;
+                    }
                 </style>
             </head>
             <body>
@@ -115,6 +121,14 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
                 <script>
                     const vscode = acquireVsCodeApi();
                     ${button.script}
+                    [...document.querySelectorAll('.test-case')].forEach(ii => ii.addEventListener('click', evt => {
+                        const el = evt.target.nextElementSibling;
+                        const [input, output, ...txt] = el.innerText.replace(/(输入|输出|：|: )/g, '').split('\\n');
+                        vscode.postMessage({
+                            command: 'TestCase',
+                            value: { input, output },
+                        });
+                    }));
                 </script>
             </body>
             </html>
@@ -130,6 +144,10 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
         switch (message.command) {
             case "ShowProblem": {
                 await commands.executeCommand("leetcode.showProblem", this.node);
+                break;
+            }
+            case "TestCase": {
+                await commands.executeCommand("leetcode.testCase", this.node.id, message.value);
                 break;
             }
         }
@@ -164,7 +182,7 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
             difficulty: difficulty.slice(2),
             likes: likes.split(": ")[1].trim(),
             dislikes: dislikes.split(": ")[1].trim(),
-            body: body.join("\n").replace(/<pre>[\r\n]*([^]+?)[\r\n]*<\/pre>/g, "<pre><code>$1</code></pre>"),
+            body: body.join("\n").replace(/<pre>[\r\n]*([^]+?)[\r\n]*<\/pre>/g, '<pre><button class="test-case">Test Case</button><code>$1</code></pre>'),
         };
     }
 
@@ -198,6 +216,7 @@ interface IDescription {
 
 interface IWebViewMessage {
     command: string;
+    value: object | null;
 }
 
 export const leetCodePreviewProvider: LeetCodePreviewProvider = new LeetCodePreviewProvider();

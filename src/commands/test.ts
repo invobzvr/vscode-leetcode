@@ -11,6 +11,7 @@ import { DialogType, promptForOpenOutputChannel, showFileSelectDialog } from "..
 import { getActiveFilePath } from "../utils/workspaceUtils";
 import * as wsl from "../utils/wslUtils";
 import { leetCodeSubmissionProvider } from "../webview/leetCodeSubmissionProvider";
+import { executeCommand } from "../utils/cpUtils";
 
 export async function testSolution(uri?: vscode.Uri): Promise<void> {
     try {
@@ -85,6 +86,18 @@ export async function testSolution(uri?: vscode.Uri): Promise<void> {
     } catch (error) {
         await promptForOpenOutputChannel("Failed to test the solution. Please open the output channel for details.", DialogType.error);
     }
+}
+
+export async function testCase(id: string, tcase: { input: string, output: string }): Promise<void> {
+    const customTestCaseCmd = vscode.workspace.getConfiguration('leetcode').get<string>('customTestCaseCmd');
+    if (!customTestCaseCmd) {
+        vscode.window.showWarningMessage('Not set config "leetcode.customTestCaseCmd".');
+        return;
+    }
+    const [command, ...args] = customTestCaseCmd.split(' ');
+    args.push('--id', id, '--input', `"${tcase.input}"`, '--output', `"${tcase.output}"`);
+    const result = await executeCommand(command, args);
+    vscode.window.showInformationMessage(result);
 }
 
 function parseTestString(test: string): string {

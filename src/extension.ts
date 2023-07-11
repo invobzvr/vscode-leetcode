@@ -67,6 +67,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             vscode.commands.registerCommand("leetcode.addFavorite", (node: LeetCodeNode) => star.addFavorite(node)),
             vscode.commands.registerCommand("leetcode.removeFavorite", (node: LeetCodeNode) => star.removeFavorite(node)),
             vscode.commands.registerCommand("leetcode.problems.sort", () => plugin.switchSortingStrategy()),
+            vscode.commands.registerCommand("leetcode.testCase", (id: string, tcase: { input: string, output: string }) => test.testCase(id, tcase)),
         );
 
         await leetCodeExecutor.switchEndpoint(plugin.getLeetCodeEndpoint());
