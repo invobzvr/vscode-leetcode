@@ -89,14 +89,14 @@ export async function testSolution(uri?: vscode.Uri): Promise<void> {
     }
 }
 
-export async function testCase(id: string, tcase: { input: string, output: string }): Promise<void> {
+export async function testCase(encodedCase: string): Promise<void> {
     const customTestCaseCmd = getWorkspaceConfiguration().get<string>('customTestCaseCmd');
     if (!customTestCaseCmd) {
         vscode.window.showWarningMessage('Not set config "leetcode.customTestCaseCmd".');
         return;
     }
     const [command, ...args] = customTestCaseCmd.split(' ');
-    args.push('--id', id, '--input', `"${tcase.input}"`, '--output', `"${tcase.output}"`);
+    args.push(encodedCase);
     const result = await executeCommand(command, args, { cwd: getWorkspaceFolder(), shell: true });
     vscode.window.showInformationMessage(result);
 }

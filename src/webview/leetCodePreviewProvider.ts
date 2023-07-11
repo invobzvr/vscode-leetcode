@@ -147,7 +147,7 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
                 break;
             }
             case "TestCase": {
-                await commands.executeCommand("leetcode.testCase", this.node.id, message.value);
+                await commands.executeCommand("leetcode.testCase", btoa(JSON.stringify({ no: this.node.id, ...message.value })));
                 break;
             }
         }
